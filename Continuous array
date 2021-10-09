@@ -1,0 +1,105 @@
+
+class Solution {
+public:
+    
+
+int findMaxLength(vector<int>& nums)
+{ 
+	// Creates an empty hashMap hM 
+
+	unordered_map<int, int> hM; 
+
+	int sum = 0;	 // Initialize sum of elements 
+	int max_len = 0; // Initialize result 
+	int ending_index = -1; 
+  int n=nums.size();
+	for (int i = 0; i < n; i++) 
+		nums[i] = (nums[i] == 0)? -1: 1; 
+
+	// Traverse through the given array 
+
+	for (int i = 0; i < n; i++) 
+	{ 
+		// Add current element to sum 
+
+		sum += nums[i]; 
+
+		// To handle sum=0 at last index 
+
+		if (sum == 0) 
+		{ 
+			max_len = i + 1; 
+			ending_index = i; 
+		} 
+
+		// If this sum is seen before, then update max_len 
+		// if required 
+
+		if (hM.find(sum + n) != hM.end()) 
+		{ 
+			if (max_len < i - hM[sum + n]) 
+			{ 
+				max_len = i - hM[sum + n]; 
+				ending_index = i; 
+			} 
+		} 
+		else // Else put this sum in hash table 
+			hM[sum + n] = i; 
+	} 
+
+	for (int i = 0; i < n; i++) 
+		nums[i] = (nums[i] == -1)? 0: 1; 
+
+	
+
+// Driver method 
+
+// This code is contributed by Aditya Goel 
+
+	 /*int findMaxLength(vector<int>& nums) {
+        int maxl=-1;
+        
+        for(int i=0;i<nums.size();i++)
+        {int zero=0;
+        int one=0;
+            if(nums[i]==0)
+                zero++;
+            else
+                one++;
+            int j;
+            for(j=i+1;j<nums.size();j++)
+            {
+               if(nums[j]==0)
+                zero++;
+               else
+                one++; 
+               
+                if(zero==one)
+                {
+                   int k=j-i+1;
+                if(maxl<k)
+                    maxl=k;
+                    
+                }
+                    
+            }
+        // cout<<i<<" "<<j<<"\n";
+        // cout<<zero<<" "<<one<<"\n";
+         int k;
+            if(zero==one)
+            {
+                 k=j-i;
+                if(maxl<k)
+                    maxl=k;
+                if((nums.size()-i)<=k)
+             break;
+            }
+         */
+        if(max_len==-1)
+            return 0;
+        else
+            
+        return max_len;
+        
+    }
+};
