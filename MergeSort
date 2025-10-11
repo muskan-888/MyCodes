@@ -1,0 +1,102 @@
+// Merge Sort implementation in C++
+//
+// This file provides a clear, commented implementation of Merge Sort
+// suitable for inclusion in a typical competitive programming / interview
+// style repository. It includes:
+//  - a `merge` helper that merges two sorted subarrays
+//  - a recursive `mergeSort` function that sorts in-place
+//  - complexity notes and stability information
+//  - a small `main` demonstrating usage on a sample array
+//
+// Time complexity: O(n log n) in all cases (best, average, worst)
+// Space complexity: O(n) auxiliary for merging (not in-place)
+// Stability: Merge sort is a stable sorting algorithm when implemented
+//            with a merge that prefers the left element on ties.
+
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+	// Merge two sorted subarrays of `a`.
+	// First subarray is a[l..m], second subarray is a[m+1..r].
+	static void merge(vector<int>& a, int l, int m, int r) {
+		int n1 = m - l + 1;
+		int n2 = r - m;
+
+		// Create temporary vectors
+		vector<int> left(n1);
+		vector<int> right(n2);
+
+		for (int i = 0; i < n1; ++i) left[i] = a[l + i];
+		for (int j = 0; j < n2; ++j) right[j] = a[m + 1 + j];
+
+		// Merge back into a[l..r]
+		int i = 0, j = 0, k = l;
+		while (i < n1 && j < n2) {
+			// Use <= to keep stability: when equal, take from left
+			if (left[i] <= right[j]) {
+				a[k++] = left[i++];
+			} else {
+				a[k++] = right[j++];
+			}
+		}
+
+		// Copy remaining elements, if any
+		while (i < n1) a[k++] = left[i++];
+		while (j < n2) a[k++] = right[j++];
+	}
+
+	// Recursive merge sort on subarray a[l..r]
+	static void mergeSort(vector<int>& a, int l, int r) {
+		if (l >= r) return; // base case: single element
+
+		int m = l + (r - l) / 2;
+		// Sort first and second halves
+		mergeSort(a, l, m);
+		mergeSort(a, m + 1, r);
+		// Merge the sorted halves
+		merge(a, l, m, r);
+	}
+
+	// Convenience wrapper
+	static void mergeSort(vector<int>& a) {
+		if (a.empty()) return;
+		mergeSort(a, 0, (int)a.size() - 1);
+	}
+};
+
+// Small helper to pretty-print a vector
+static void printVector(const vector<int>& v) {
+	for (size_t i = 0; i < v.size(); ++i) {
+		if (i) cout << ' ';
+		cout << v[i];
+	}
+	cout << '\n';
+}
+
+int main() {
+	// Example usage and quick verification
+	vector<int> a = {38, 27, 43, 3, 9, 82, 10};
+
+	cout << "Original array:\n";
+	printVector(a);
+
+	Solution::mergeSort(a);
+
+	cout << "Sorted array:\n";
+	printVector(a);
+
+	// Additional simple test: already-sorted and reverse-sorted arrays
+	vector<int> b = {1, 2, 3, 4, 5};
+	vector<int> c = {5, 4, 3, 2, 1};
+	Solution::mergeSort(b);
+	Solution::mergeSort(c);
+
+	cout << "Sorted b (should be 1 2 3 4 5):\n";
+	printVector(b);
+	cout << "Sorted c (should be 1 2 3 4 5):\n";
+	printVector(c);
+
+	return 0;
+}
